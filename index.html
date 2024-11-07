@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой сайт</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #007BFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 1s;
+        }
+        .hello {
+            font-size: 4vw;
+            color: white;
+            position: absolute;
+            z-index: 1;
+            animation: scaleAnimation 2s forwards;
+        }
+        @keyframes scaleAnimation {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 5vw;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            width: 80vw;
+            height: 90vh;
+            max-width: 800px;
+            position: absolute;
+            transform: scale(0);
+            animation: grow 1s forwards;
+            display: none;
+        }
+        @keyframes grow {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        @keyframes slideOutRight {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        @keyframes slideInLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOutLeft {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+        @keyframes slideInRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        header, footer {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        h2, p {
+            color: #555;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .content-container {
+            max-height: 30vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .content-container::-webkit-scrollbar {
+            width: 5px;
+        }
+        .content-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hello" id="hello">Привет</div>
+    <div class="container" id="container">
+        <header>
+            <h1 id="page-title">Добро пожаловать на мой сайт</h1>
+        </header>
+        <main>
+            <h2 id="sub-title">О нас</h2>
+            <div id="content">Это простой пример сайта с эффектом матового стекла и прозрачности.</div>
+            <button class="button" onclick="changeContent('page1')">Перейти на страницу 1</button>
+            <button class="button" onclick="changeContent('page2')">Перейти на страницу 2</button>
+            <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
+        </main>
+        <footer>
+            <p>© 2024 Мой сайт</p>
+        </footer>
+    </div>
+
+    <script>
+        function hideHello() {
+            const hello = document.getElementById('hello');
+            hello.style.opacity = '0';
+            setTimeout(() => {
+                hello.style.display = 'none';
+            }, 2000);
+        }
+
+        setTimeout(() => {
+            hideHello();
+            document.getElementById('container').style.display = 'block';
+            document.getElementById('container').style.animation = 'grow 1s forwards';
+        }, 2000);
+
+        function changeContent(page) {
+            const container = document.getElementById('container');
+            const isGoingToMain = (page === 'main');
+
+            container.style.animation = isGoingToMain ? 'slideOutLeft 1s forwards' : 'slideOutRight 1s forwards';
+
+            setTimeout(() => {
+                if (page === 'main') {
+                    updateMainContent();
+                } else {
+                    loadPageContent(page);
+                }
+
+                container.style.animation = isGoingToMain ? 'slideInRight 1s forwards' : 'slideInLeft 1s forwards';
+            }, 1000);
+        }
+
+        function loadPageContent(page) {
+            const pageMap = {
+                'page1': 'page1.html',
+                'page2': 'page2.html'
+            };
+            const filePath = pageMap[page];
+
+            if (filePath) {
+                fetch(filePath)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Не удалось загрузить страницу.");
+                        return response.text();
+                    })
+                    .then(data => {
+                        document.getElementById('page-title').textContent = page === 'page1' ? 'Страница 1' : 'Страница 2';
+                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Стихотворение' : 'Информация о странице 2';
+                        document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
+                        
+                        document.querySelectorAll('.button').forEach(button => {
+                            button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Ошибка загрузки:", error);
+                        document.getElementById('content').textContent = 'Ошибка загрузки содержимого страницы.';
+                    });
+            }
+        }
+
+        function updateMainContent() {
+            document.getElementById('page-title').textContent = 'Добро пожаловать на мой сайт';
+            document.getElementById('sub-title').textContent = 'О нас';
+            document.getElementById('content').textContent = 'Это пример простого сайта с эффектом матового стекла и прозрачности.';
+            document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
+        }
+    </script>
+</body>
+</html>
