@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Простой сайт</title>
+    <title>Простой спйт домашка</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +36,7 @@
         }
         .container {
             background: rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 5vw;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(15px);
@@ -137,11 +137,11 @@
     <div class="hello" id="hello">Hello</div>
     <div class="container" id="container">
         <header>
-            <h1 id="page-title">Добро пожаловать на мой сайт</h1>
+            <h1 id="page-title">Добро пожаловать на сайт</h1>
         </header>
         <main>
             <h2 id="sub-title">О нас</h2>
-            <div id="content">Это простой пример сайта с эффектом матового стекла и прозрачности.</div>
+            <div id="content">Это простой сайт</div>
             <button class="button" onclick="changeContent('page1')">Перейти на страницу 1</button>
             <button class="button" onclick="changeContent('page2')">Перейти на страницу 2</button>
             <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
@@ -197,8 +197,8 @@
                         return response.text();
                     })
                     .then(data => {
-                        document.getElementById('page-title').textContent = page === 'page1' ? 'Страница 1' : 'Страница 2';
-                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Стихотворение' : 'Информация о странице 2';
+                        document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
+                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Ноябрь' : 'About';
                         document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
                         
                         document.querySelectorAll('.button').forEach(button => {
