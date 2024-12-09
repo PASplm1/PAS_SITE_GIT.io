@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Простой спйт домашка</title>
+    <title>Простой сайт домашка</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -140,14 +140,14 @@
             <h1 id="page-title">Добро пожаловать на сайт</h1>
         </header>
         <main>
-            <h2 id="sub-title">О нас</h2>
-            <div id="content">Это простой сайт</div>
+            <h2 id="sub-title">О проекте</h2>
+            <div id="content">Это простой сайт с дз</div>
             <button class="button" onclick="changeContent('page1')">Перейти на страницу 1</button>
             <button class="button" onclick="changeContent('page2')">Перейти на страницу 2</button>
             <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
         </main>
         <footer>
-            <p>© 2024 Мой сайт</p>
+            <p>© 2024 PASsite</p>
         </footer>
     </div>
 
@@ -164,7 +164,7 @@
             hideHello();
             document.getElementById('container').style.display = 'block';
             document.getElementById('container').style.animation = 'grow 1s forwards';
-        }, 2000);
+        }, 800);
 
         function changeContent(page) {
             const container = document.getElementById('container');
