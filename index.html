@@ -137,11 +137,11 @@
     <div class="hello" id="hello">Hello</div>
     <div class="container" id="container">
         <header>
-            <h1 id="page-title">Добро пожаловать </h1>
+            <h1 id="page-title">Добро пожаловать друг </h1>
         </header>
         <main>
             <h2 id="sub-title">О проекте</h2>
-            <div id="content">Это сайт с дз</div>
+            <div id="content">Привет друг это сайт с дз(ВАЖНО МОГУТ БЫТЬ БАГИ ЭТО СОФТ-ЗАПУСК) </div>
             <button class="button" onclick="changeContent('page1')">ДЗ</button>
             <button class="button" onclick="changeContent('page2')">Update of system</button>
             <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
@@ -198,7 +198,7 @@
                     })
                     .then(data => {
                         document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
-                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Январь' : 'About';
+                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Январь' : ,'About';
                         document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
                         
                         document.querySelectorAll('.button').forEach(button => {
