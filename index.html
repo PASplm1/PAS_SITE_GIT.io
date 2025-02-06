@@ -222,12 +222,37 @@
                     });
             }
         }
+
         function updateMainContent() {
             document.getElementById('page-title').textContent = 'Добро пожаловать друг';
             document.getElementById('sub-title').textContent = 'News-Новости';
             document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.1 включает небольшие исправление, подробнее в "Site info"';
             document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
         }
+
+        function sendMessageToTelegram(message) {
+            const token = '7594707019:AAENdktYKFGecOZjAwfH-K4JQVtndJ2X74E';  
+            const chatId = '-1002446461136';  
+
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log('Сообщение отправлено в Telegram!');
+                    } else {
+                        console.error('Ошибка отправки сообщения:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка в сети:', error);
+                });
+        }
+        
+        document.querySelector('button[onclick="changeContent(\'page1\')"]').addEventListener('click', () => {
+            sendMessageToTelegram('Пользователь открыл страницу ДЗ');
+        });
     </script>
 </body>
 </html>
