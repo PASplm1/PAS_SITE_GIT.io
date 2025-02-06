@@ -150,10 +150,10 @@
         </header>
         <main>
             <h2 id="sub-title">Новости-News</h2>
-            <div id="content">Тут будут написаны новости касательно сайта!</div>
+            <div id="content">ОБНОВЛЕНИЕ 1.5.1 включает небольшие исправление, подробнее в "Site info"</div>
             <div class="buttons-container">
                 <button class="button" onclick="changeContent('page1')">ДЗ</button>
-                <button class="button" onclick="changeContent('page2')">TheSiteUpdate</button>
+                <button class="button" onclick="changeContent('page2')">Site Info</button>
                 <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
             </div>
         </main>
@@ -209,7 +209,7 @@
                     })
                   .then(data => {
                         document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
-                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' :'About';
+                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' :'pasSITE';
                         document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
                         
                         document.querySelectorAll('.button').forEach(button => {
@@ -225,7 +225,7 @@
         function updateMainContent() {
             document.getElementById('page-title').textContent = 'Добро пожаловать друг';
             document.getElementById('sub-title').textContent = 'News-Новости';
-            document.getElementById('content').textContent = 'Тут будут написаны важные новости касательно сайта!!';
+            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.1 включает небольшие исправление, подробнее в "Site info"';
             document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
         }
     </script>
