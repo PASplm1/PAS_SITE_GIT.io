@@ -177,6 +177,39 @@
             document.getElementById('container').style.animation = 'grow 1s forwards';
         }, 1000);
 
+        function getUniqueUsername() {
+            let username = localStorage.getItem('username');
+            if (!username) {
+                const uniqueId = Date.now();
+                username = `User${uniqueId}`;
+                localStorage.setItem('username', username);
+            }
+            return username;
+        }
+
+        function sendMessageToTelegram(message) {
+            const token = '7594707019:AAENdktYKFGecOZjAwfH-K4JQVtndJ2X74E';  
+            const chatId = '-1002446461136';  
+
+            const username = getUniqueUsername();
+            const fullMessage = `${username}: ${message}`;
+
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(fullMessage)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        console.log('Сообщение отправлено в Telegram!');
+                    } else {
+                        console.error('Ошибка отправки сообщения:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка в сети:', error);
+                });
+        }
+
         function changeContent(page) {
             const container = document.getElementById('container');
             const isGoingToMain = (page === 'main');
@@ -230,26 +263,6 @@
             document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
         }
 
-        function sendMessageToTelegram(message) {
-            const token = '7594707019:AAENdktYKFGecOZjAwfH-K4JQVtndJ2X74E';  
-            const chatId = '-1002446461136';  
-
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        console.log('Сообщение отправлено в Telegram!');
-                    } else {
-                        console.error('Ошибка отправки сообщения:', data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка в сети:', error);
-                });
-        }
-        
         document.querySelector('button[onclick="changeContent(\'page1\')"]').addEventListener('click', () => {
             sendMessageToTelegram('Пользователь открыл страницу ДЗ');
         });
