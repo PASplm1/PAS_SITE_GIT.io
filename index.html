@@ -104,16 +104,16 @@
         }
         h2, p {
             color: #555;
-            margin-bottom: 20px;  /* Отступ между заголовком и текстом */
+            margin-bottom: 20px;
         }
         #content {
-            margin-bottom: 20px;  /* Отступ между текстом и кнопками */
+            margin-bottom: 20px;
         }
         .buttons-container {
             display: flex;
             flex-direction: column;
             width: 100%;
-            gap: 10px;  /* Отступ между кнопками */
+            gap: 10px;
         }
         .button {
             padding: 15px 20px;
@@ -150,7 +150,7 @@
         </header>
         <main>
             <h2 id="sub-title">Новости-News</h2>
-            <div id="content">ОБНОВЛЕНИЕ 1.5.3 включает небольшие исправление, подробнее в "Site info"</div>
+            <div id="content">ОБНОВЛЕНИЕ 1.5.4 включает небольшие исправление, подробнее в "Site info"</div>
             <div class="buttons-container">
                 <button class="button" onclick="changeContent('page1')">ДЗ</button>
                 <button class="button" onclick="changeContent('page2')">Site Info</button>
@@ -240,14 +240,17 @@
                         if (!response.ok) throw new Error("Не удалось загрузить страницу.");
                         return response.text();
                     })
-                  .then(data => {
-                        document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
-                        document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' :'pasSITE';
-                        document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
-                        
-                        document.querySelectorAll('.button').forEach(button => {
-                            button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
-                        });
+                    .then(data => {
+                        if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
+                            document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
+                            document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
+                            document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
+
+                            // Ensure buttons are shown only for the main page
+                            document.querySelectorAll('.button').forEach(button => {
+                                button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
+                            });
+                        }
                     })
                     .catch(error => {
                         console.error("Ошибка загрузки:", error);
@@ -258,8 +261,8 @@
 
         function updateMainContent() {
             document.getElementById('page-title').textContent = 'Добро пожаловать друг';
-            document.getElementById('sub-title').textContent = 'News-Новости';
-            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.3 включает небольшие исправление, подробнее в "Site info"';
+            document.getElementById('sub-title').textContent = 'Новости-News';
+            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.4 включает небольшие исправление, подробнее в "Site info"';
             document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
         }
 
