@@ -39,7 +39,7 @@
             border-radius: 20px;
             padding: 5vw;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px); /* Применяем размытие фона */
             width: 77vw;
             height: 85vh;
             max-width: 800px;
@@ -47,6 +47,7 @@
             transform: scale(0);
             animation: grow 1s forwards;
             display: none;
+            z-index: 2;
         }
         @keyframes grow {
             from {
@@ -140,6 +141,37 @@
             background: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
         }
+
+        .snowflakes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1; 
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: snow 10s linear infinite;
+        }
+
+        @keyframes snow {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(50px) translateY(100vh); /* Снежинки падают */
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -150,7 +182,7 @@
         </header>
         <main>
             <h2 id="sub-title">Новости-News</h2>
-            <div id="content">ОБНОВЛЕНИЕ 1.5.4 включает небольшие исправление, подробнее в "Site info"</div>
+            <div id="content">ОБНОВЛЕНИЕ 1.5.5 включает обновелние фона, подробнее в "Site info"</div>
             <div class="buttons-container">
                 <button class="button" onclick="changeContent('page1')">ДЗ</button>
                 <button class="button" onclick="changeContent('page2')">Site Info</button>
@@ -161,6 +193,8 @@
             <p>© 2025 pasSITE</p>
         </footer>
     </div>
+
+    <div class="snowflakes" id="snowflakes"></div>
 
     <script>
         function hideHello() {
@@ -175,7 +209,42 @@
             hideHello();
             document.getElementById('container').style.display = 'block';
             document.getElementById('container').style.animation = 'grow 1s forwards';
+            changeBackgroundToSnow();
         }, 1500);
+
+        function changeBackgroundToSnow() {
+            document.body.style.transition = 'background-color 1s';
+            document.body.style.backgroundColor = '#1a1a2e';
+
+            setTimeout(() => {
+                createSnowflakes();
+            }, 3000);
+        }
+
+        function createSnowflakes() {
+            const snowflakesContainer = document.getElementById('snowflakes');
+            let snowflakeCount = 0;
+            
+            const interval = setInterval(() => {
+                if (snowflakeCount < 50) {
+                    const snowflake = document.createElement('div');
+                    snowflake.classList.add('snowflake');
+                    const size = Math.random() * 5 + 2;
+                    const leftPosition = Math.random() * 100 + '%';
+                    const animationDuration = Math.random() * 5 + 5;
+
+                    snowflake.style.width = `${size}px`;
+                    snowflake.style.height = `${size}px`;
+                    snowflake.style.left = leftPosition;
+                    snowflake.style.animationDuration = `${animationDuration}s`;
+
+                    snowflakesContainer.appendChild(snowflake);
+                    snowflakeCount++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100);  // Добавляем снежинку каждые 100мс
+        }
 
         function getUniqueUsername() {
             let username = localStorage.getItem('username');
@@ -244,7 +313,7 @@
                         if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
                             document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
                             document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
-                            document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;
+                            document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;  
 
                             // Ensure buttons are shown only for the main page
                             document.querySelectorAll('.button').forEach(button => {
@@ -262,7 +331,7 @@
         function updateMainContent() {
             document.getElementById('page-title').textContent = 'Добро пожаловать друг';
             document.getElementById('sub-title').textContent = 'Новости-News';
-            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.4 включает небольшие исправление, подробнее в "Site info"';
+            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.5 включает обновелние фона, подробнее в "Site info"';
             document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
         }
 
