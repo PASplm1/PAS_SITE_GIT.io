@@ -182,7 +182,7 @@
         </header>
         <main>
             <h2 id="sub-title">Новости-News</h2>
-            <div id="content">ОБНОВЛЕНИЕ 1.5.5 включает небольшие исправление, подробнее в "Site info"</div>
+            <div id="content">ОБНОВЛЕНИЕ 1.5.8включает небольшие исправление, подробнее в "Site info"</div>
             <div class="buttons-container">
                 <button class="button" onclick="changeContent('page1')">ДЗ</button>
                 <button class="button" onclick="changeContent('page2')">Site Info</button>
@@ -311,7 +311,6 @@
                     document.getElementById('content').innerHTML = `<div class="content-container">Загрузка...</div>`;
                 }
 
-                // Добавляем небольшую задержку, чтобы браузер успел отрисовать "Загрузка..."
                 setTimeout(() => {
                     fetch(filePath)
                         .then(response => {
@@ -339,7 +338,7 @@
         function updateMainContent() {
             document.getElementById('page-title').textContent = 'Добро пожаловать друг';
             document.getElementById('sub-title').textContent = 'Новости-News';
-            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.5 включает небольшие исправление, подробнее в "Site info"';
+            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.8 включает небольшие исправление, подробнее в "Site info"';
             document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
         }
 
