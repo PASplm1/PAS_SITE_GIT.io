@@ -182,7 +182,7 @@
         </header>
         <main>
             <h2 id="sub-title">Новости-News</h2>
-            <div id="content">ОБНОВЛЕНИЕ 1.5.5(beta) включает небольшие исправление, подробнее в "Site info"</div>
+            <div id="content">ОБНОВЛЕНИЕ 1.5.5 включает небольшие исправление, подробнее в "Site info"</div>
             <div class="buttons-container">
                 <button class="button" onclick="changeContent('page1')">ДЗ</button>
                 <button class="button" onclick="changeContent('page2')">Site Info</button>
@@ -210,7 +210,7 @@
             document.getElementById('container').style.display = 'block';
             document.getElementById('container').style.animation = 'grow 1s forwards';
             changeBackgroundToSnow();
-        }, 2000);
+        }, 1500);
 
         function changeBackgroundToSnow() {
             document.body.style.transition = 'background-color 1s';
@@ -293,7 +293,7 @@
                 }
 
                 container.style.animation = isGoingToMain ? 'slideInRight 1s forwards' : 'slideInLeft 1s forwards';
-            }, 1500);
+            }, 2000);
         }
 
         function loadPageContent(page) {
@@ -311,25 +311,28 @@
                     document.getElementById('content').innerHTML = `<div class="content-container">Загрузка...</div>`;
                 }
 
-                fetch(filePath)
-                    .then(response => {
-                        if (!response.ok) throw new Error("Не удалось загрузить страницу.");
-                        return response.text();
-                    })
-                    .then(data => {
-                        if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
-                            document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;  
+                // Добавляем небольшую задержку, чтобы браузер успел отрисовать "Загрузка..."
+                setTimeout(() => {
+                    fetch(filePath)
+                        .then(response => {
+                            if (!response.ok) throw new Error("Не удалось загрузить страницу.");
+                            return response.text();
+                        })
+                        .then(data => {
+                            if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
+                                document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;  
 
-                            // Ensure buttons are shown only for the main page
-                            document.querySelectorAll('.button').forEach(button => {
-                                button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Ошибка загрузки:", error);
-                        document.getElementById('content').textContent = 'Ошибка загрузки содержимого страницы.';
-                    });
+                                // Ensure buttons are shown only for the main page
+                                document.querySelectorAll('.button').forEach(button => {
+                                    button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Ошибка загрузки:", error);
+                            document.getElementById('content').textContent = 'Ошибка загрузки содержимого страницы.';
+                        });
+                }, 50);
             }
         }
 
