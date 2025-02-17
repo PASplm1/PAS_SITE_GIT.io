@@ -182,7 +182,7 @@
         </header>
         <main>
             <h2 id="sub-title">Новости-News</h2>
-            <div id="content">ОБНОВЛЕНИЕ 1.5.5 включает небольшие исправление, подробнее в "Site info"</div>
+            <div id="content">ОБНОВЛЕНИЕ 1.5.5(beta) включает небольшие исправление, подробнее в "Site info"</div>
             <div class="buttons-container">
                 <button class="button" onclick="changeContent('page1')">ДЗ</button>
                 <button class="button" onclick="changeContent('page2')">Site Info</button>
@@ -304,6 +304,13 @@
             const filePath = pageMap[page];
 
             if (filePath) {
+                // Выводим сообщение "Загрузка..." до начала загрузки
+                if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
+                    document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
+                    document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
+                    document.getElementById('content').innerHTML = `<div class="content-container">Загрузка...</div>`;
+                }
+
                 fetch(filePath)
                     .then(response => {
                         if (!response.ok) throw new Error("Не удалось загрузить страницу.");
@@ -311,8 +318,6 @@
                     })
                     .then(data => {
                         if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
-                            document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
-                            document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
                             document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;  
 
                             // Ensure buttons are shown only for the main page
