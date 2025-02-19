@@ -320,8 +320,6 @@
                         .then(data => {
                             if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
                                 document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;  
-
-                                // Ensure buttons are shown only for the main page
                                 document.querySelectorAll('.button').forEach(button => {
                                     button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
                                 });
