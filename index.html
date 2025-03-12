@@ -1,348 +1,369 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pasSITE - Домашка</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #007BFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            transition: background-color 1s;
-        }
-        .hello {
-            font-size: 5vw;
-            color: white;
-            position: absolute;
-            z-index: 1;
-            animation: scaleAnimation 2s forwards;
-        }
-        @keyframes scaleAnimation {
-            0% {
-                opacity: 1;
-                transform: scale(0.3);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.5);
-            }
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            padding: 5vw;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(3px); /* Применяем размытие фона */
-            width: 77vw;
-            height: 85vh;
-            max-width: 800px;
-            position: absolute;
-            transform: scale(0);
-            animation: grow 1s forwards;
-            display: none;
-            z-index: 2;
-        }
-        @keyframes grow {
-            from {
-                transform: scale(0);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-        @keyframes slideOutRight {
-            0% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-        @keyframes slideInLeft {
-            0% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        @keyframes slideOutLeft {
-            0% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-        }
-        @keyframes slideInRight {
-            0% {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        header, footer {
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-        }
-        h2, p {
-            color: #555;
-            margin-bottom: 20px;
-        }
-        #content {
-            margin-bottom: 20px;
-        }
-        .buttons-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            gap: 10px;
-        }
-        .button {
-            padding: 15px 20px;
-            background: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-            cursor: pointer;
-            text-align: center;
-        }
-        .button:hover {
-            background: gray;
-        }
-        .content-container {
-            max-height: 35vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-        .content-container::-webkit-scrollbar {
-            width: 5px;
-        }
-        .content-container::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-
-        .snowflakes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: 1; 
-            overflow: hidden;
-        }
-
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            background-color: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: snow 10s linear infinite;
-        }
-
-        @keyframes snow {
-            0% {
-                transform: translateX(0) translateY(0);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateX(50px) translateY(100vh); /* Снежинки падают */
-                opacity: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pasSITE - Домашка</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #007BFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color 1s;
+    }
+    .hello {
+      font-size: 5vw;
+      color: white;
+      position: absolute;
+      z-index: 1;
+      animation: scaleAnimation 2s forwards;
+    }
+    @keyframes scaleAnimation {
+      0% { opacity: 1; transform: scale(0.3); }
+      100% { opacity: 1; transform: scale(1.5); }
+    }
+    #container {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      padding: 5vw;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      backdrop-filter: blur(3px);
+      width: 77vw;
+      min-height: 85vh;
+      max-width: 800px;
+      position: absolute;
+      transform: scale(0);
+      animation: grow 1s forwards;
+      display: none;
+      z-index: 2;
+    }
+    @keyframes grow { from { transform: scale(0); } to { transform: scale(1); } }
+    @keyframes slideOutRight { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(100%); opacity: 0; } }
+    @keyframes slideInLeft { 0% { transform: translateX(-100%); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOutLeft { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-100%); opacity: 0; } }
+    @keyframes slideInRight { 0% { transform: translateX(100%); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(5px); }
+      50% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
+    }
+    .shake { animation: shake 0.5s; }
+    header, footer { text-align: center; }
+    h1 { color: #333; }
+    h2, p { color: #555; margin-bottom: 20px; }
+    #content { margin-bottom: 20px; }
+    .buttons-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+    }
+    .button {
+      padding: 15px 20px;
+      background: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background 0.3s;
+      cursor: pointer;
+      text-align: center;
+      border: 2px solid white;
+      outline: none;
+    }
+    .button:hover { background: gray; }
+    .button:focus { outline: none; box-shadow: 0 0 0 2px white; }
+    .dev-button { }
+    .content-container {
+      max-height: 35vh;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    .content-container::-webkit-scrollbar { width: 5px; }
+    .content-container::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+    .snowflakes {
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      background-color: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: snow 10s linear infinite;
+    }
+    @keyframes snow { 0% { transform: translateX(0) translateY(0); opacity: 0.8; } 100% { transform: translateX(50px) translateY(100vh); opacity: 0; } }
+    input[type="text"],
+    input[type="password"] {
+      background-color: #444;
+      color: white;
+      border-radius: 10px;
+      border: 2px solid white;
+      padding: 10px;
+      margin-bottom: 20px;
+      width: 80%;
+      font-size: 1.5em;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+    #devError { text-align: center; }
+  </style>
 </head>
 <body>
-    <div class="hello" id="hello">Hello</div>
-    <div class="container" id="container">
-        <header>
-            <h1 id="page-title">Добро пожаловать друг</h1>
-        </header>
-        <main>
-            <h2 id="sub-title">Новости-News</h2>
-            <div id="content">ОБНОВЛЕНИЕ 1.5.8 включает небольшие исправление, подробнее в "Site info"</div>
-            <div class="buttons-container">
-                <button class="button" onclick="changeContent('page1')">ДЗ</button>
-                <button class="button" onclick="changeContent('page2')">Site Info</button>
-                <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
-            </div>
-        </main>
-        <footer>
-            <p>© 2025 pasSITE</p>
-        </footer>
-    </div>
-
-    <div class="snowflakes" id="snowflakes"></div>
-
-    <script>
-        function hideHello() {
-            const hello = document.getElementById('hello');
-            hello.style.opacity = '0';
-            setTimeout(() => {
-                hello.style.display = 'none';
-            }, 15);
-        }
-
+  <div class="hello" id="hello">Hello</div>
+  <div id="container"></div>
+  <div class="snowflakes" id="snowflakes"></div>
+  <script>
+    function hideHello() {
+      const hello = document.getElementById('hello');
+      hello.style.opacity = '0';
+      setTimeout(() => { hello.style.display = 'none'; }, 15);
+    }
+    function changeBackgroundToSnow() {
+      document.body.style.transition = 'background-color 1s';
+      document.body.style.backgroundColor = '#1a1a2e';
+      setTimeout(createSnowflakes, 3000);
+    }
+    function createSnowflakes() {
+      const snowflakesContainer = document.getElementById('snowflakes');
+      let count = 0;
+      const interval = setInterval(() => {
+        if (count < 50) {
+          const flake = document.createElement('div');
+          flake.classList.add('snowflake');
+          const size = Math.random() * 5 + 2;
+          flake.style.width = size + 'px';
+          flake.style.height = size + 'px';
+          flake.style.left = Math.random() * 100 + '%';
+          flake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+          snowflakesContainer.appendChild(flake);
+          count++;
+        } else { clearInterval(interval); }
+      }, 100);
+    }
+    const views = {
+      view1: `<header><h1>Хм, похоже ты здесь впервые?</h1></header>
+              <main>
+                <p>Здесь ты можешь ввести свое имя, и оно будет в главном меню, чтобы лично тебя приветствовать!<br><br>
+ВАЖНО: после подтверждения изменить имя будет невозможно!<br><br>
+ЕЩЁ ВАЖНЕЕ: Эту функцию я делал очень долго поэтому будет просто великолепно если ты её будешь использовать СПАСИБО!
+ «Продолжить».</p>
+                <div class="buttons-container"><button class="button" onclick="goForward('view2')">Продолжить</button></div>
+              </main>`,
+      view2: `<header><h1>Добавьте ваше имя</h1></header>
+              <main>
+                <p>Изменить имя будет нельзя выбирай с умом!!
+      Выберите один из вариантов:</p>
+                <div class="buttons-container">
+                  <button class="button" onclick="goForward('view3')">Добавить имя</button>
+                  <button class="button" onclick="goBack('view4')">Добавить позже</button>
+                  <!button class="button" onclick="neverAskName()"><!Никогда!></button>
+                </div>
+              </main>`,
+      view3: `<header><h1>Введите ваше имя</h1></header>
+              <main>
+                <input type="text" id="nameField" maxlength="10" placeholder="Введите имя">
+                <div class="buttons-container"><button class="button" onclick="submitName()">Подтвердить</button></div>
+              </main>`,
+      view4: `<header><h1 id="page-title">Добро пожаловать, друг</h1></header>
+              <main>
+                <h2 id="sub-title">Новости-News</h2>
+                <div id="content">Новое большое ОБНОВЛЕНИЕ 2.0 включает множество исправлений и улучшений, подробно в "Site info"</div>
+                <div class="buttons-container">
+                  <button class="button" onclick="changeContent('page1')">ДЗ</button>
+                  <button class="button" onclick="changeContent('page2')">Site Info</button>
+                  <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
+                </div>
+              </main>
+              <footer><p id="footerText">© 2025 pasSITE</p></footer>`,
+      view5: `<header><h1>Вход в режим разработчика</h1></header>
+              <main>
+                <input type="password" id="devPasswordField" maxlength="10" placeholder="Введите пароль">
+                <div class="buttons-container">
+                  <button class="button" onclick="checkDevPassword()">Вход</button>
+                  <button class="button" onclick="goBack('view4')">Вернуться на главное меню</button>
+                </div>
+              </main>`,
+      view6: `<header><h1>Меню разработчика PAS</h1></header>
+              <main>
+                <div class="buttons-container">
+                  <button class="button dev-button" onclick="clearUsername()">Очистить имя</button>
+                  <button class="button dev-button" onclick="goBack('view4')">Главное меню</button>
+                </div>
+              </main>`
+    };
+    const container = document.getElementById('container');
+    function loadView(viewId) { container.innerHTML = views[viewId] || '<h1>Ошибка: вид не найден</h1>'; }
+    function loadMainMenu() { loadView('view4'); updateMainContent(); setupFooterTripleClick(); }
+    function goForward(toView) {
+      container.style.animation = 'slideOutLeft 1s forwards';
+      setTimeout(() => { loadView(toView); if (toView === 'view4') { updateMainContent(); setupFooterTripleClick(); } container.style.animation = 'slideInRight 1s forwards'; }, 1000);
+    }
+    function goBack(toView) {
+      container.style.animation = 'slideOutRight 1s forwards';
+      setTimeout(() => { loadView(toView); if (toView === 'view4') { updateMainContent(); setupFooterTripleClick(); } container.style.animation = 'slideInLeft 1s forwards'; }, 1000);
+    }
+    function getUsername() { return localStorage.getItem('username') || ''; }
+    function isRandomCode(name) { return /^User\d+$/.test(name); }
+    function updateMainContent() {
+      const titleElem = container.querySelector('#page-title');
+      if (titleElem) { const name = getUsername(); titleElem.textContent = (name && !isRandomCode(name)) ? ('Добро пожаловать, ' + name) : 'Добро пожаловать, друг'; }
+    }
+    function submitName() {
+      const input = document.getElementById('nameField');
+      const name = (input?.value || '').trim();
+      if (name.length > 0) {
+        input.style.borderColor = "green";
         setTimeout(() => {
-            hideHello();
-            document.getElementById('container').style.display = 'block';
-            document.getElementById('container').style.animation = 'grow 1s forwards';
-            changeBackgroundToSnow();
-        }, 1500);
-
-        function changeBackgroundToSnow() {
-            document.body.style.transition = 'background-color 1s';
-            document.body.style.backgroundColor = '#1a1a2e';
-
-            setTimeout(() => {
-                createSnowflakes();
-            }, 3000);
+          localStorage.setItem('username', name);
+          localStorage.setItem('visited', 'true');
+          updateMainContent();
+          goBack('view4');
+        }, 1000);
+      } else { alert('Пожалуйста, введите имя'); }
+    }
+    function neverAskName() { localStorage.setItem('dontAskName', 'true'); goBack('view4'); }
+    function getTelegramName() {
+      let name = localStorage.getItem('username');
+      if (name && !isRandomCode(name)) return name;
+      let uniqueId = localStorage.getItem('uniqueId');
+      if (!uniqueId) { uniqueId = "User" + Date.now(); localStorage.setItem('uniqueId', uniqueId); }
+      return uniqueId;
+    }
+    function sendMessageToTelegram(message) {
+      const token = '7594707019:AAENdktYKFGecOZjAwfH-K4JQVtndJ2X74E';
+      const chatId = '-1002446461136';
+      const os = getOS();
+      const uniqueId = localStorage.getItem('uniqueId') || ("User" + Date.now());
+      if (!localStorage.getItem('uniqueId')) { localStorage.setItem('uniqueId', uniqueId); }
+      const userName = localStorage.getItem('username');
+      let prefix = uniqueId + ": " + message + " (" + os + ")";
+      if (userName && !isRandomCode(userName)) { prefix += " (" + userName + ")"; }
+      const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(prefix)}`;
+      fetch(url)
+        .then(r => r.json())
+        .then(data => { if (data.ok) console.log('Сообщение отправлено'); else console.error('Ошибка отправки', data); })
+        .catch(e => { console.error('Ошибка сети', e); });
+    }
+    function changeContent(page) {
+      const isMain = (page === 'main');
+      const direction = isMain ? 'back' : 'forward';
+      container.style.animation = direction === 'forward' ? 'slideOutLeft 1s forwards' : 'slideOutRight 1s forwards';
+      setTimeout(() => { 
+         if (page === 'main') { loadMainMenu(); } else { loadMainMenu(); loadPageContent(page); }
+         container.style.animation = direction === 'forward' ? 'slideInRight 1s forwards' : 'slideInLeft 1s forwards';
+      }, 1000);
+    }
+    function loadPageContent(page) {
+      const pageMap = { 'page1': 'page1.html', 'page2': 'page2.html' };
+      const filePath = pageMap[page];
+      if (filePath) {
+        const contentElem = container.querySelector('#content');
+        const pageTitle = container.querySelector('#page-title');
+        const subTitle = container.querySelector('#sub-title');
+        if (pageTitle) pageTitle.textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
+        if (subTitle) subTitle.textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
+        if (contentElem) {
+          contentElem.innerHTML = '<div class="content-container">Загрузка...</div>';
+          setTimeout(() => {
+            fetch(filePath)
+              .then(r => { if (!r.ok) throw new Error("Ошибка загрузки"); return r.text(); })
+              .then(data => { contentElem.innerHTML = '<div class="content-container">' + data + '</div>'; })
+              .catch(e => { console.error("Ошибка", e); contentElem.textContent = 'Ошибка загрузки содержимого страницы.'; });
+          }, 50);
         }
-
-        function createSnowflakes() {
-            const snowflakesContainer = document.getElementById('snowflakes');
-            let snowflakeCount = 0;
-            
-            const interval = setInterval(() => {
-                if (snowflakeCount < 50) {
-                    const snowflake = document.createElement('div');
-                    snowflake.classList.add('snowflake');
-                    const size = Math.random() * 5 + 2;
-                    const leftPosition = Math.random() * 100 + '%';
-                    const animationDuration = Math.random() * 5 + 5;
-
-                    snowflake.style.width = `${size}px`;
-                    snowflake.style.height = `${size}px`;
-                    snowflake.style.left = leftPosition;
-                    snowflake.style.animationDuration = `${animationDuration}s`;
-
-                    snowflakesContainer.appendChild(snowflake);
-                    snowflakeCount++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 100);  // Добавляем снежинку каждые 100мс
+        // Для страниц ДЗ и Site Info оставляем только кнопку "Вернуться на главное меню"
+        if (page === 'page1' || page === 'page2') {
+          const buttonsContainer = container.querySelector('.buttons-container');
+          if (buttonsContainer) {
+            buttonsContainer.innerHTML = '<button class="button" onclick="changeContent(\'main\')">Вернуться на главное меню</button>';
+          }
         }
-
-        function getUniqueUsername() {
-            let username = localStorage.getItem('username');
-            if (!username) {
-                const uniqueId = Date.now();
-                username = `User${uniqueId}`;
-                localStorage.setItem('username', username);
-            }
-            return username;
-        }
-
-        function sendMessageToTelegram(message) {
-            const token = '7594707019:AAENdktYKFGecOZjAwfH-K4JQVtndJ2X74E';  
-            const chatId = '-1002446461136';  
-
-            const username = getUniqueUsername();
-            const fullMessage = `${username}: ${message}`;
-
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(fullMessage)}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ok) {
-                        console.log('Сообщение отправлено в Telegram!');
-                    } else {
-                        console.error('Ошибка отправки сообщения:', data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка в сети:', error);
-                });
-        }
-
-        function changeContent(page) {
-            const container = document.getElementById('container');
-            const isGoingToMain = (page === 'main');
-
-            container.style.animation = isGoingToMain ? 'slideOutLeft 1s forwards' : 'slideOutRight 1s forwards';
-
-            setTimeout(() => {
-                if (page === 'main') {
-                    updateMainContent();
-                } else {
-                    loadPageContent(page);
-                }
-
-                container.style.animation = isGoingToMain ? 'slideInRight 1s forwards' : 'slideInLeft 1s forwards';
-            }, 1500);
-        }
-
-        function loadPageContent(page) {
-            const pageMap = {
-                'page1': 'page1.html',
-                'page2': 'page2.html'
-            };
-            const filePath = pageMap[page];
-
-            if (filePath) {
-                // Выводим сообщение "Загрузка..." до начала загрузки
-                if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
-                    document.getElementById('page-title').textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
-                    document.getElementById('sub-title').textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
-                    document.getElementById('content').innerHTML = `<div class="content-container">Загрузка...</div>`;
-                }
-
-                setTimeout(() => {
-                    fetch(filePath)
-                        .then(response => {
-                            if (!response.ok) throw new Error("Не удалось загрузить страницу.");
-                            return response.text();
-                        })
-                        .then(data => {
-                            if (document.getElementById('page-title') && document.getElementById('sub-title') && document.getElementById('content')) {
-                                document.getElementById('content').innerHTML = `<div class="content-container">${data}</div>`;  
-                                document.querySelectorAll('.button').forEach(button => {
-                                    button.style.display = button.innerText.includes("главное меню") ? 'inline-block' : 'none';
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Ошибка загрузки:", error);
-                            document.getElementById('content').textContent = 'Ошибка загрузки содержимого страницы.';
-                        });
-                }, 50);
-            }
-        }
-
-        function updateMainContent() {
-            document.getElementById('page-title').textContent = 'Добро пожаловать друг';
-            document.getElementById('sub-title').textContent = 'Новости-News';
-            document.getElementById('content').textContent = 'ОБНОВЛЕНИЕ 1.5.8 включает небольшие исправление, подробнее в "Site info"';
-            document.querySelectorAll('.button').forEach(button => button.style.display = 'inline-block');
-        }
-
-        document.querySelector('button[onclick="changeContent(\'page1\')"]').addEventListener('click', () => {
-            sendMessageToTelegram('Пользователь открыл страницу ДЗ');
-        });
-    </script>
+      }
+    }
+    function setupFooterTripleClick() {
+      const footerText = container.querySelector('#footerText');
+      if (!footerText) return;
+      let count = 0, timer = null;
+      footerText.onclick = () => {
+        count++;
+        if (count === 1) { timer = setTimeout(() => { count = 0; }, 800); }
+        if (count === 3) { clearTimeout(timer); count = 0; goForward('view5'); }
+      };
+    }
+    function checkDevPassword() {
+      const passField = container.querySelector('#devPasswordField');
+      if (!passField) return;
+      if (passField.value === "1233") {
+        passField.style.borderColor = "green";
+        setTimeout(() => {
+          passField.value = "1233";
+          setTimeout(() => { goForward('view6'); }, 1000);
+        }, 1000);
+      } else {
+        passField.style.borderColor = "red";
+        passField.classList.add("shake");
+        const origPlaceholder = passField.getAttribute("placeholder");
+        passField.setAttribute("placeholder", "неправильно");
+        passField.value = "";
+        setTimeout(() => {
+          passField.style.borderColor = "";
+          passField.classList.remove("shake");
+          passField.setAttribute("placeholder", origPlaceholder);
+        }, 2500);
+      }
+    }
+    function clearUsername() {
+      localStorage.removeItem('username');
+      localStorage.removeItem('dontAskName');
+      alert('Имя и флаг "Никогда" очищены!');
+    }
+    function getOS() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      if (/android/i.test(ua)) return "Android";
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
+      if (/Win/i.test(ua)) return "Windows";
+      if (/Mac/i.test(ua)) return "Mac";
+      if (/Linux/i.test(ua)) return "Linux";
+      return "unknown";
+    }
+    (function() {
+      const origSend = sendMessageToTelegram;
+      sendMessageToTelegram = msg => {
+        const os = getOS();
+        origSend(msg);
+      };
+    })();
+    setTimeout(() => {
+      hideHello();
+      container.style.display = 'block';
+      container.style.animation = 'grow 1s forwards';
+      const storedName = localStorage.getItem('username');
+      const dontAsk = localStorage.getItem('dontAskName');
+      if ((!storedName || isRandomCode(storedName)) && !dontAsk) { loadView('view1'); }
+      else { loadMainMenu(); }
+      changeBackgroundToSnow();
+    }, 1500);
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.getAttribute('onclick') === "changeContent('page1')") { sendMessageToTelegram('Пользователь открыл страницу ДЗ'); }
+    });
+  </script>
 </body>
 </html>
