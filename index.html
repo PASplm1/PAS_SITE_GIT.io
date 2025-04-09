@@ -17,6 +17,9 @@
       overflow: hidden;
       transition: background-color 1s;
     }
+    .no-shadows .button {
+      box-shadow: none !important;
+    }
     .hello {
       font-size: 5vw;
       color: white;
@@ -48,6 +51,7 @@
     @keyframes slideInLeft { 0% { transform: translateX(-100%); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
     @keyframes slideOutLeft { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-100%); opacity: 0; } }
     @keyframes slideInRight { 0% { transform: translateX(100%); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOutCenterLeft { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-100%); opacity: 0; } }
     @keyframes shake {
       0% { transform: translateX(0); }
       25% { transform: translateX(5px); }
@@ -72,11 +76,12 @@
       color: white;
       text-decoration: none;
       border-radius: 5px;
-      transition: background 0.3s;
+      transition: background 0.3s, box-shadow 0.3s;
       cursor: pointer;
       text-align: center;
       border: 2px solid white;
       outline: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
     .button:hover { background: gray; }
     .button:focus { outline: none; box-shadow: 0 0 0 2px white; }
@@ -130,7 +135,18 @@
   <div class="hello" id="hello">Hello</div>
   <div id="container"></div>
   <div class="snowflakes" id="snowflakes"></div>
+
   <script>
+    const currentUpdateVersion = "2";
+    
+    function updateShadows() {
+      if(localStorage.getItem('shadows') === 'disabled'){
+        document.body.classList.add('no-shadows');
+      } else {
+        document.body.classList.remove('no-shadows');
+      }
+    }
+    
     function hideHello() {
       const hello = document.getElementById('hello');
       hello.style.opacity = '0';
@@ -160,72 +176,241 @@
     }
     const views = {
       view1: `<header><h1>Хм, похоже ты здесь впервые?</h1></header>
-              <main>
-                <p>Здесь ты можешь ввести свое имя, и оно будет в главном меню, чтобы лично тебя приветствовать!<br><br>
+<main>
+  <p>Здесь ты можешь ввести своё имя, и оно будет в главном меню, чтобы лично тебя приветствовать!<br><br>
 ВАЖНО: после подтверждения изменить имя будет невозможно!<br><br>
-ЕЩЁ ВАЖНЕЕ: Эту функцию я делал очень долго поэтому будет просто великолепно если ты её будешь использовать СПАСИБО!
+Ещё важнее: эту функцию я делал очень долго, поэтому будет просто великолепно, если ты её будешь использовать.
  «Продолжить».</p>
-                <div class="buttons-container"><button class="button" onclick="goForward('view2')">Продолжить</button></div>
-              </main>`,
+  <div class="buttons-container"><button class="button" onclick="goForward('view2')">Продолжить</button></div>
+</main>`,
       view2: `<header><h1>Добавьте ваше имя</h1></header>
-              <main>
-                <p>Изменить имя будет нельзя выбирай с умом!!
-      Выберите один из вариантов:</p>
-                <div class="buttons-container">
-                  <button class="button" onclick="goForward('view3')">Добавить имя</button>
-                  <button class="button" onclick="goBack('view4')">Добавить позже</button>
-                  <!button class="button" onclick="neverAskName()"><!Никогда!></button>
-                </div>
-              </main>`,
+<main>
+  <p>Изменить имя будет нельзя, выбирай с умом!<br>
+Выберите один из вариантов:</p>
+  <div class="buttons-container">
+    <button class="button" onclick="goForward('view3')">Добавить имя</button>
+    <button class="button" onclick="goForward('view2b')">Добавить позже</button>
+  </div>
+</main>`,
+      view2b: `<header><h1>Вы точно уверены?</h1></header>
+<main>
+  <p style="text-align:center;">Вы действительно хотите пропустить добавление имени?</p>
+  <div class="buttons-container">
+    <button class="button" onclick="goForward('view4')">Да</button>
+    <button class="button" onclick="goBack('view2')">Нет</button>
+  </div>
+</main>`,
       view3: `<header><h1>Введите ваше имя</h1></header>
-              <main>
-                <input type="text" id="nameField" maxlength="10" placeholder="Введите имя">
-                <div class="buttons-container"><button class="button" onclick="submitName()">Подтвердить</button></div>
-              </main>`,
+<main>
+  <input type="text" id="nameField" maxlength="10" placeholder="Введите имя">
+  <div class="buttons-container"><button class="button" onclick="submitName()">Подтвердить</button></div>
+</main>`,
       view4: `<header><h1 id="page-title">Добро пожаловать, друг</h1></header>
-              <main>
-                <h2 id="sub-title">Новости-News</h2>
-                <div id="content">Новое большое ОБНОВЛЕНИЕ 2.0 включает множество исправлений и улучшений, подробно в "Site info"</div>
-                <div class="buttons-container">
-                  <button class="button" onclick="changeContent('page1')">ДЗ</button>
-                  <button class="button" onclick="changeContent('page2')">Site Info</button>
-                  <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
-                </div>
-              </main>
-              <footer><p id="footerText">© 2025 pasSITE</p></footer>`,
+<main>
+  <h2 id="sub-title">Новости-News</h2>
+  <div id="content">Новое большое ОБНОВЛЕНИЕ 2.5 включает множество новых функций и изменений, подробно в "Site info"</div>
+  <div class="buttons-container">
+    <button class="button" onclick="changeContent('page1')">ДЗ</button>
+    <button class="button" onclick="changeContent('page2')">Site Info</button>
+    <button class="button" onclick="changeContent('main')">Вернуться на главное меню</button>
+  </div>
+</main>
+<footer><p id="footerText">© 2025 pasSITE</p></footer>`,
       view5: `<header><h1>Вход в режим разработчика</h1></header>
-              <main>
-                <input type="password" id="devPasswordField" maxlength="10" placeholder="Введите пароль">
-                <div class="buttons-container">
-                  <button class="button" onclick="checkDevPassword()">Вход</button>
-                  <button class="button" onclick="goBack('view4')">Вернуться на главное меню</button>
-                </div>
-              </main>`,
+<main>
+  <input type="password" id="devPasswordField" maxlength="10" placeholder="Введите пароль">
+  <div class="buttons-container">
+    <button class="button" onclick="checkDevPassword()">Вход</button>
+    <button class="button" onclick="goBack('view4')">Вернуться на главное меню</button>
+  </div>
+</main>`,
       view6: `<header><h1>Меню разработчика PAS</h1></header>
-              <main>
-                <div class="buttons-container">
-                  <button class="button dev-button" onclick="clearUsername()">Очистить имя</button>
-                  <button class="button dev-button" onclick="goBack('view4')">Главное меню</button>
-                </div>
-              </main>`
+<main>
+  <div class="buttons-container">
+    <button class="button dev-button" onclick="clearUsername()">Очистить имя</button>
+    <button class="button dev-button" onclick="clearUpdate()">Очистить обновление</button>
+    <button class="button dev-button" onclick="goBack('view4')">Главное меню</button>
+  </div>
+</main>`,
+      view7: `<header><h1>Настройки</h1></header>
+<main>
+  <div class="buttons-container">
+    <button class="button" onclick="openSiteInfo()">Site Info</button>
+    <button class="button" onclick="openCustomization()">Кастомизация</button>
+    <button class="button" onclick="openReport()">Отчёт</button>
+    <button class="button" onclick="goBack('view4')">Вернуться на главное меню</button>
+  </div>
+</main>`,
+      view8: `<header><h1>Personal Greeting</h1></header>
+<main>
+  <p>Эта функция изменяет приветствие в главном меню в зависимости от времени суток.<br>
+Если функция выключена, всегда отображается «Добро пожаловать».</p>
+  <p id="customStatus">Текущий статус: <strong></strong></p>
+  <div class="buttons-container">
+    <button class="button" onclick="enableCustomGreeting()">Включить</button>
+    <button class="button" onclick="disableCustomGreeting()">Выключить</button>
+    <button class="button" onclick="goBack('view7')">Вернуться назад</button>
+  </div>
+</main>`,
+      view8a: `<header><h1>Кастомизация</h1></header>
+<main>
+  <p>Этот раздел предоставляет инструменты для настройки некоторых элементов, как ты хочешь</p>
+  <div class="buttons-container">
+    <button class="button" onclick="goForward('view8')">Personal Greeting</button>
+    <button class="button" onclick="goForward('view8b')">Button Shadows</button>
+    <button class="button" onclick="goBack('view7')">Вернуться в настройки</button>
+  </div>
+</main>`,
+      view8b: `<header><h1>Button Shadows</h1></header>
+<main>
+  <p>Эта функция настраивает тени на сайте которые отбрасывают все кнопки</p>
+  <p id="shadowsStatus">Текущий статус: <strong></strong></p>
+  <div class="buttons-container">
+    <button class="button" onclick="enableShadows()">Включить</button>
+    <button class="button" onclick="disableShadows()">Выключить</button>
+    <button class="button" onclick="goBack('view8a')">Вернуться на главное меню</button>
+  </div>
+</main>`,
+      view9: `<header><h1>Отчёт</h1></header>
+<main>
+  <p style="text-align:center;">Здесь вы можете предложить свои идеи или рассказать об ошибках.</p>
+  <div class="buttons-container">
+    <button class="button" onclick="goForward('view9b')">Продолжить</button>
+  </div>
+</main>`,
+      view9b: `<header><h1>Отчёт</h1></header>
+<main>
+  <input type="text" id="reportField" maxlength="500" placeholder="Текст" style="background-color: #444; color: white; border-radius: 10px; border: 2px solid white; padding: 10px; margin-bottom: 20px; width: 80%; font-size: 1.5em; display: block; margin-left: auto; margin-right: auto; text-align: center;">
+  <div class="buttons-container">
+    <button class="button" onclick="submitReport(this)">Отправить</button>
+    <button class="button" onclick="goBack('view4')">Вернуться на главное меню</button>
+  </div>
+</main>`,
+      view10: `<main style="display:flex; justify-content:center; align-items:center; height:85vh;">
+  <h1 style="text-align:center;">Спасибо за отчёт</h1>
+</main>`,
+      viewUpdate: `<header><h1>Вышло новое обновление</h1></header>
+<main>
+  <div id="updateContentContainer" style="max-height:35vh; overflow-y:auto; margin-bottom:20px;">
+    Загрузка...
+  </div>
+  <div class="buttons-container">
+    <button class="button" onclick="scrollToBottomAndProceed()">Продолжить</button>
+  </div>
+</main>`
     };
     const container = document.getElementById('container');
+    
+    function updateMainContent() {
+      const titleElem = container.querySelector('#page-title');
+      if (titleElem) {
+        const name = getUsername();
+        const customGreeting = localStorage.getItem('customGreeting');
+        let greeting;
+        if (customGreeting === 'disabled') {
+          greeting = "Добро пожаловать";
+          titleElem.textContent = (name && !isRandomCode(name))
+            ? (greeting + ", " + name)
+            : (greeting + ", друг");
+        } else {
+          const hour = new Date().getHours();
+          if (hour >= 6 && hour < 12) {
+            greeting = "Доброе утро";
+            titleElem.innerHTML = (name && !isRandomCode(name))
+              ? (greeting + ",<br>" + name)
+              : (greeting + ",<br>друг");
+          } else if (hour >= 12 && hour < 18) {
+            greeting = "Добро пожаловать";
+            titleElem.textContent = (name && !isRandomCode(name))
+              ? (greeting + ", " + name)
+              : (greeting + ", друг");
+          } else {
+            greeting = "Добрый вечер";
+            titleElem.textContent = (name && !isRandomCode(name))
+              ? (greeting + ", " + name)
+              : (greeting + ", друг");
+          }
+        }
+      }
+    }
+    
+    function enableCustomGreeting() {
+      localStorage.setItem('customGreeting', 'enabled');
+      updateCustomStatus();
+      updateMainContent();
+    }
+    function disableCustomGreeting() {
+      localStorage.setItem('customGreeting', 'disabled');
+      updateCustomStatus();
+      updateMainContent();
+    }
+    function updateCustomStatus() {
+      const statusElem = document.getElementById('customStatus');
+      if (statusElem) {
+        const current = localStorage.getItem('customGreeting') === 'enabled' ? 'включено' : 'выключено';
+        statusElem.innerHTML = 'Текущий статус: <strong>' + current + '</strong>';
+      }
+    }
+    
+    function enableShadows() {
+      localStorage.setItem('shadows', 'enabled');
+      updateShadowsStatus();
+      updateShadows();
+    }
+    function disableShadows() {
+      localStorage.setItem('shadows', 'disabled');
+      updateShadowsStatus();
+      updateShadows();
+    }
+    function updateShadowsStatus() {
+      const statusElem = document.getElementById('shadowsStatus');
+      if (statusElem) {
+        const current = localStorage.getItem('shadows') === 'enabled' ? 'включено' : 'выключено';
+        statusElem.innerHTML = 'Текущий статус: <strong>' + current + '</strong>';
+      }
+    }
+    function updateShadows() {
+      if(localStorage.getItem('shadows') === 'disabled'){
+        document.body.classList.add('no-shadows');
+      } else {
+        document.body.classList.remove('no-shadows');
+      }
+    }
+    
     function loadView(viewId) { container.innerHTML = views[viewId] || '<h1>Ошибка: вид не найден</h1>'; }
     function loadMainMenu() { loadView('view4'); updateMainContent(); setupFooterTripleClick(); }
     function goForward(toView) {
       container.style.animation = 'slideOutLeft 1s forwards';
-      setTimeout(() => { loadView(toView); if (toView === 'view4') { updateMainContent(); setupFooterTripleClick(); } container.style.animation = 'slideInRight 1s forwards'; }, 1000);
+      setTimeout(() => { 
+        loadView(toView); 
+        if (toView === 'view4') { 
+          updateMainContent(); 
+          setupFooterTripleClick(); 
+        }
+        if (toView === 'view8' || toView === 'view8a' || toView === 'view8b') { 
+          if(toView==='view8') updateCustomStatus();
+          if(toView==='view8b') updateShadowsStatus();
+        }
+        container.style.animation = 'slideInRight 1s forwards'; 
+        if(toView === 'viewUpdate'){
+          setTimeout(loadUpdateContent, 50);
+        }
+      }, 1000);
     }
     function goBack(toView) {
       container.style.animation = 'slideOutRight 1s forwards';
-      setTimeout(() => { loadView(toView); if (toView === 'view4') { updateMainContent(); setupFooterTripleClick(); } container.style.animation = 'slideInLeft 1s forwards'; }, 1000);
+      setTimeout(() => { 
+        loadView(toView); 
+        if (toView === 'view4') { 
+          updateMainContent(); 
+          setupFooterTripleClick(); 
+        }
+        container.style.animation = 'slideInLeft 1s forwards'; 
+      }, 1000);
     }
     function getUsername() { return localStorage.getItem('username') || ''; }
     function isRandomCode(name) { return /^User\d+$/.test(name); }
-    function updateMainContent() {
-      const titleElem = container.querySelector('#page-title');
-      if (titleElem) { const name = getUsername(); titleElem.textContent = (name && !isRandomCode(name)) ? ('Добро пожаловать, ' + name) : 'Добро пожаловать, друг'; }
-    }
+    
     function submitName() {
       const input = document.getElementById('nameField');
       const name = (input?.value || '').trim();
@@ -267,45 +452,77 @@
       const direction = isMain ? 'back' : 'forward';
       container.style.animation = direction === 'forward' ? 'slideOutLeft 1s forwards' : 'slideOutRight 1s forwards';
       setTimeout(() => { 
-         if (page === 'main') { loadMainMenu(); } else { loadMainMenu(); loadPageContent(page); }
-         container.style.animation = direction === 'forward' ? 'slideInRight 1s forwards' : 'slideInLeft 1s forwards';
+        if (page === 'main') { 
+          loadMainMenu(); 
+        } else { 
+          loadMainMenu(); 
+          loadPageContent(page); 
+        }
+        container.style.animation = direction === 'forward' ? 'slideInRight 1s forwards' : 'slideInLeft 1s forwards'; 
       }, 1000);
     }
+    
     function loadPageContent(page) {
       const pageMap = { 'page1': 'page1.html', 'page2': 'page2.html' };
       const filePath = pageMap[page];
-      if (filePath) {
-        const contentElem = container.querySelector('#content');
-        const pageTitle = container.querySelector('#page-title');
-        const subTitle = container.querySelector('#sub-title');
-        if (pageTitle) pageTitle.textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
-        if (subTitle) subTitle.textContent = page === 'page1' ? 'Февраль' : 'pasSITE';
-        if (contentElem) {
-          contentElem.innerHTML = '<div class="content-container">Загрузка...</div>';
-          setTimeout(() => {
-            fetch(filePath)
-              .then(r => { if (!r.ok) throw new Error("Ошибка загрузки"); return r.text(); })
-              .then(data => { contentElem.innerHTML = '<div class="content-container">' + data + '</div>'; })
-              .catch(e => { console.error("Ошибка", e); contentElem.textContent = 'Ошибка загрузки содержимого страницы.'; });
-          }, 50);
-        }
-        // Для страниц ДЗ и Site Info оставляем только кнопку "Вернуться на главное меню"
-        if (page === 'page1' || page === 'page2') {
-          const buttonsContainer = container.querySelector('.buttons-container');
-          if (buttonsContainer) {
-            buttonsContainer.innerHTML = '<button class="button" onclick="changeContent(\'main\')">Вернуться на главное меню</button>';
-          }
+      const contentElem = container.querySelector('#content');
+      const pageTitle = container.querySelector('#page-title');
+      const subTitle = container.querySelector('#sub-title');
+      
+      if (pageTitle) pageTitle.textContent = page === 'page1' ? 'ДЗ' : 'TheUpdateList';
+      if (subTitle)  subTitle.textContent  = page === 'page1' ? 'Февраль' : 'pasSITE';
+      
+      if (page === 'page1') {
+        contentElem.innerHTML = `
+          <div class="content-container" id="homeworkContainer">
+            <div id="currentLesson" style="color:#555; margin-bottom:10px;"></div>
+            <div id="homeworkData">Загрузка...</div>
+          </div>
+        `;
+        setTimeout(() => {
+          fetch(filePath)
+            .then(r => { if (!r.ok) throw new Error("Ошибка загрузки"); return r.text(); })
+            .then(data => {
+              const hwData = document.getElementById('homeworkData');
+              if (hwData) hwData.innerHTML = data;
+            })
+            .catch(e => {
+              console.error("Ошибка", e);
+              contentElem.textContent = 'Ошибка загрузки содержимого страницы.';
+            });
+        }, 50);
+      }
+      else if (page === 'page2') {
+        contentElem.innerHTML = '<div class="content-container">Загрузка...</div>';
+        setTimeout(() => {
+          fetch(filePath)
+            .then(r => { if (!r.ok) throw new Error("Ошибка загрузки"); return r.text(); })
+            .then(data => {
+              contentElem.innerHTML = '<div class="content-container">' + data + '</div>';
+            })
+            .catch(e => {
+              console.error("Ошибка", e);
+              contentElem.textContent = 'Ошибка загрузки содержимого страницы.';
+            });
+        }, 50);
+      }
+      
+      if (page === 'page1' || page === 'page2') {
+        const buttonsContainer = container.querySelector('.buttons-container');
+        if (buttonsContainer) {
+          buttonsContainer.innerHTML = '<button class="button" onclick="changeContent(\'main\')">Вернуться на главное меню</button>';
         }
       }
     }
+    
     function setupFooterTripleClick() {
       const footerText = container.querySelector('#footerText');
       if (!footerText) return;
       let count = 0, timer = null;
-      footerText.onclick = () => {
-        count++;
-        if (count === 1) { timer = setTimeout(() => { count = 0; }, 800); }
-        if (count === 3) { clearTimeout(timer); count = 0; goForward('view5'); }
+      footerText.onclick = () => { 
+        count++; 
+        if (count === 1) { timer = setTimeout(() => { count = 0; }, 800); } 
+        if (count === 3) { clearTimeout(timer); count = 0; goForward('view5'); } 
       };
     }
     function checkDevPassword() {
@@ -323,17 +540,21 @@
         const origPlaceholder = passField.getAttribute("placeholder");
         passField.setAttribute("placeholder", "неправильно");
         passField.value = "";
-        setTimeout(() => {
-          passField.style.borderColor = "";
-          passField.classList.remove("shake");
-          passField.setAttribute("placeholder", origPlaceholder);
+        setTimeout(() => { 
+          passField.style.borderColor = ""; 
+          passField.classList.remove("shake"); 
+          passField.setAttribute("placeholder", origPlaceholder); 
         }, 2500);
-      }
+      }			
     }
     function clearUsername() {
       localStorage.removeItem('username');
       localStorage.removeItem('dontAskName');
-      alert('Имя и флаг "Никогда" очищены!');
+      alert("Флаг имени отчищен");
+    }
+    function clearUpdate() {
+      localStorage.removeItem('updateVersion');
+      alert("Флаг обновления очищен");
     }
     function getOS() {
       const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -346,24 +567,120 @@
     }
     (function() {
       const origSend = sendMessageToTelegram;
-      sendMessageToTelegram = msg => {
-        const os = getOS();
-        origSend(msg);
+      sendMessageToTelegram = msg => { 
+        const os = getOS(); 
+        origSend(msg); 
       };
     })();
+    function openSettings() { goForward('view7'); }
+    function openSiteInfo() { changeContent('page2'); }
+    function openCustomization() { goForward('view8a'); }
+    function openReport() { goForward('view9'); }
+    function customSendReportToTelegram(reportText) {
+      const uniqueId = localStorage.getItem('uniqueId') || ("User" + Date.now());
+      if (!localStorage.getItem('uniqueId')) { localStorage.setItem('uniqueId', uniqueId); }
+      const os = getOS();
+      const token = '7594707019:AAENdktYKFGecOZjAwfH-K4JQVtndJ2X74E';
+      const chatId = '-1002446461136';
+      const finalMessage = uniqueId + ": ОТЧЁТ (" + os + ") (PAS) (" + reportText + ")";
+      const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(finalMessage)}`;
+      fetch(url)
+        .then(r => r.json())
+        .then(data => { if (data.ok) console.log('Сообщение отправлено'); else console.error('Ошибка отправки', data); })
+        .catch(e => { console.error('Ошибка сети', e); });
+    }
+    function submitReport(btn) {
+      const reportField = document.getElementById('reportField');
+      const reportText = (reportField?.value || '').trim();
+      if (reportText.length === 0) { alert('Пожалуйста, введите отчёт'); return; }
+      reportField.style.borderColor = "green";
+      setTimeout(() => {
+        customSendReportToTelegram(reportText);
+        goForward('view10');
+        setTimeout(() => { goBack('view4'); }, 3000);
+      }, 1000);
+    }
+    function overrideSiteInfoButton() {
+      if (container.innerHTML.includes('Site Info')) {
+        const btn = container.querySelector('button[onclick*="changeContent(\'page2\')"]');
+        if (btn) { btn.onclick = openSettings; btn.textContent = "Настройки"; }
+      }
+    }
+    setInterval(overrideSiteInfoButton, 10);
     setTimeout(() => {
       hideHello();
       container.style.display = 'block';
       container.style.animation = 'grow 1s forwards';
       const storedName = localStorage.getItem('username');
       const dontAsk = localStorage.getItem('dontAskName');
-      if ((!storedName || isRandomCode(storedName)) && !dontAsk) { loadView('view1'); }
-      else { loadMainMenu(); }
+      if ((!storedName || isRandomCode(storedName)) && !dontAsk) { 
+        loadView('view1'); 
+      } else { 
+        loadMainMenu(); 
+      }
       changeBackgroundToSnow();
+      updateShadows();
+      if(getUsername()){
+        if(localStorage.getItem('updateVersion') !== currentUpdateVersion){
+          localStorage.removeItem('updateVersion');
+          loadView('viewUpdate');
+          setTimeout(loadUpdateContent, 50);
+        }
+      }
     }, 1500);
+    
+    function proceedUpdate() {
+      localStorage.setItem('updateVersion', currentUpdateVersion);
+      container.style.animation = 'slideOutCenterLeft 1s forwards';
+      setTimeout(() => { 
+        loadMainMenu();
+        container.style.animation = 'slideInRight 1s forwards';
+      }, 1000);
+    }
     document.addEventListener('click', (e) => {
-      if (e.target && e.target.getAttribute('onclick') === "changeContent('page1')") { sendMessageToTelegram('Пользователь открыл страницу ДЗ'); }
+      if (e.target && e.target.getAttribute('onclick') === "changeContent('page1')") { 
+        sendMessageToTelegram('Пользователь открыл страницу ДЗ'); 
+      }
     });
+    
+    function loadUpdateContent() {
+      const updateContainer = document.getElementById('updateContentContainer');
+      if (!updateContainer) return;
+      updateContainer.innerHTML = '<div class="content-container">Загрузка...</div>';
+      setTimeout(() => {
+        fetch('PageUpdateList.html')
+          .then(r => { if (!r.ok) throw new Error("Ошибка загрузки"); return r.text(); })
+          .then(data => { 
+            updateContainer.innerHTML = '<div class="content-container">' + data + '</div>'; 
+          })
+          .catch(e => { 
+            console.error("Ошибка", e); 
+            updateContainer.textContent = 'Ошибка загрузки содержимого обновления.'; 
+          });
+      }, 50);
+    }
+    
+    function scrollToBottomAndProceed() {
+      const updateContainer = document.getElementById('updateContentContainer');
+      if (updateContainer) {
+        updateContainer.scrollTo({ top: updateContainer.scrollHeight, behavior: 'smooth' });
+        setTimeout(proceedUpdate, 1000);
+      } else {
+        proceedUpdate();
+      }
+    }
   </script>
+  <script>
+    views.viewUpdate = `<header><h1>Вышло новое обновление</h1></header>
+<main>
+  <div id="updateContentContainer" style="max-height:35vh; overflow-y:auto; margin-bottom:20px;">
+    Загрузка...
+  </div>
+  <div class="buttons-container">
+    <button class="button" onclick="scrollToBottomAndProceed()">Продолжить</button>
+  </div>
+</main>`;
+  </script>
+  <script src="scheduleData.js"></script>
 </body>
 </html>
